@@ -1,4 +1,5 @@
 import sys
+from pathlib import Path
 import datetime
 import json
 import os
@@ -57,19 +58,46 @@ def resource_path(relative_path):
         return os.path.join(sys._MEIPASS, relative_path)
     return os.path.join(os.path.abspath("."), relative_path)
 
+def get_settings_path():
+    if sys.platform == "win32":
+        appdata_path = os.getenv('LOCALAPPDATA')
+        if not appdata_path:
+            appdata_path = os.path.expanduser('~')
+        settings_dir = os.path.join(appdata_path, "GrassallyTimer")
+    else:
+        settings_dir = os.path.join(os.path.expanduser('~'), ".grassallytimer")
+    os.makedirs(settings_dir, exist_ok=True)
+    return os.path.join(settings_dir, "settings.json")
+
+def get_images_dir():
+    if sys.platform == "win32":
+        images_dir = os.path.join(os.getenv("LOCALAPPDATA"), "GrassallyTimer", "images")
+    else:
+        images_dir = os.path.join(str(Path.home()), ".grassallytimer", "images")
+    os.makedirs(images_dir, exist_ok=True)
+    return images_dir
+
+def get_desktop_path():
+    if sys.platform == "win32":
+        desktop_path = os.path.join(os.getenv("USERPROFILE"), "Desktop")
+    else:
+        desktop_path = os.path.join(str(Path.home()), "Desktop")
+    return desktop_path
+
 class TransparentWidget(QWidget):
     def __init__(self):
         super().__init__()
         self.last_update_time = None
         self.cached_days_left = None
         self.cached_progress = None
-        self.settings_file = resource_path("settings/settings.json")
+        self.settings_file = get_settings_path()
+        self.images_dir = get_images_dir()
+        self.background_image = os.path.join(self.images_dir, "background_image.png")
         self.pin_icon_normal = resource_path("assets/pin_icon_normal.png")
         self.pin_icon_rotated = resource_path("assets/pin_icon_rotated.png")
         self.settings_icon = resource_path("assets/settings_icon.png")
         self.image_icon = resource_path("assets/image_icon.png")
         self.image_icon_delete = resource_path("assets/image_icon_delete.png")
-        self.background_image = resource_path("assets/background_image.png")
         self.load_settings()
         self.is_expanded = False
         self.notification_label = None
@@ -93,10 +121,12 @@ class TransparentWidget(QWidget):
         self.background_opacity_effect = QGraphicsOpacityEffect()
         self.background_opacity_effect.setOpacity(self.opacity / 100.0)
 
+        background_image_path = self.background_image.replace("\\", "/")
+
         self.background_widget = QWidget(self)
         self.background_widget.setGeometry(self.rect())
         self.background_widget.setStyleSheet(f"""
-            background-image: url('{self.background_image}'); 
+            background-image: url('{background_image_path}'); 
             background-repeat: no-repeat;
             background-position: center;
             background-size: contain;
@@ -407,9 +437,10 @@ class TransparentWidget(QWidget):
         self.notification_animation.start()
 
     def update_input_fields(self):
-        """Обновляет значения в полях ввода на основе текущих значений start_year и num_courses."""
-        self.start_year_input.setText(str(self.start_year) if self.start_year is not None else "")
-        self.num_courses_input.setText(str(self.num_courses) if self.num_courses is not None else "")
+        self.start_year_input.setText(
+            str(self.start_year) if self.start_year is not None and self.start_year != 0 else "")
+        self.num_courses_input.setText(
+            str(self.num_courses) if self.num_courses is not None and self.num_courses != 0 else "")
 
     def load_settings(self):
         if os.path.exists(self.settings_file):
@@ -474,7 +505,7 @@ class TransparentWidget(QWidget):
         self.update_info()
 
     def update_info(self):
-        if self.start_year is None or self.num_courses is None:
+        if self.start_year is None or self.num_courses is None or self.start_year == 0 or self.num_courses == 0:
             self.label.setText("Настройте программу\n"
                                "перед использованием")
             return
@@ -547,7 +578,14 @@ class TransparentWidget(QWidget):
         self.background_opacity_effect.setOpacity(value / 100.0)
 
     def change_background_image(self):
-        file_name, _ = QFileDialog.getOpenFileName(self, "Выберите фоновое изображение", "", "Images (*.png *.jpg *.bmp)")
+        desktop_path = get_desktop_path()
+
+        file_name, _ = QFileDialog.getOpenFileName(
+            self,
+            "Выберите фоновое изображение",
+            desktop_path,
+            "Images (*.png *.jpg *.bmp)"
+        )
         if file_name:
             image = QImage(file_name)
             if image.isNull():
@@ -556,9 +594,10 @@ class TransparentWidget(QWidget):
 
             scaled_image = image.scaled(300, 300, Qt.AspectRatioMode.KeepAspectRatio,
                                         Qt.TransformationMode.SmoothTransformation)
-            scaled_image.save("assets/background_image.png")
+            scaled_image.save(self.background_image)
+            background_image_path = self.background_image.replace("\\", "/")
             self.background_widget.setStyleSheet(f"""
-                background-image: url('{self.background_image}'); 
+                background-image: url('{background_image_path}'); 
                 background-repeat: no-repeat;
                 background-position: center;
                 background-size: contain;
@@ -566,13 +605,16 @@ class TransparentWidget(QWidget):
             """)
 
     def delete_background(self):
-        self.background_widget.setStyleSheet("""
-            background-image: none;
-            border-radius: 10px;
-        """)
+        if os.path.exists(self.background_image):
+            os.remove(self.background_image)
+            self.show_notification("Фоновое изображение удалено")
 
-        if os.path.exists("assets/background_image.png"):
-            os.remove("assets/background_image.png")
+            self.background_widget.setStyleSheet("""
+                    background-image: none;
+                    border-radius: 10px;
+                """)
+        else:
+            self.show_notification("Фоновое изображение отсутствует")
 
     def mousePressEvent(self, event):
         if event.button() == Qt.MouseButton.LeftButton and not self.is_locked:
