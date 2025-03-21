@@ -156,6 +156,7 @@ class TransparentWidget(QWidget):
             }
         """)
         self.background_button.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+        self.background_button.setToolTip("Добавить фон")
         self.background_button.clicked.connect(self.change_background_image)
         self.top_bar.addWidget(self.background_button)
 
@@ -164,6 +165,7 @@ class TransparentWidget(QWidget):
             self.pin_button.setIcon(QIcon(QPixmap(self.pin_icon_rotated)))
         else:
             self.pin_button.setIcon(QIcon(QPixmap(self.pin_icon_normal)))
+
         self.pin_button.setFixedSize(24, 24)
         self.pin_button.setStyleSheet("""
             QPushButton {
@@ -215,9 +217,9 @@ class TransparentWidget(QWidget):
         self.start_year_input.setVisible(False)
         self.start_year_input.setText(str(self.start_year))
 
-        self.start_year_input.setValidator(QIntValidator(1900, 2100, self))
+        self.start_year_input.setValidator(QIntValidator(2000, 2100, self))
 
-        self.num_courses_label = QLabel("Курсы:", self)
+        self.num_courses_label = QLabel("Кол-во курсов:", self)
         self.num_courses_label.setStyleSheet("color: white; border-radius: 10px; padding: 5px;")
         self.num_courses_label.setVisible(False)
 
@@ -475,12 +477,12 @@ class TransparentWidget(QWidget):
             self.show_notification("Введите корректные числа")
             return
 
-        if start_year != 0 and (start_year < 1900 or start_year > 2100):
-            self.show_notification("Ошибка: год начала должен быть от 1900 до 2100")
+        if start_year != 0 and (start_year < 2000 or start_year > 2100):
+            self.show_notification("Введите корректный год")
             return
 
         if num_courses != 0 and (num_courses < 1 or num_courses > 6):
-            self.show_notification("Ошибка: количество курсов должно быть от 1 до 6")
+            self.show_notification("Введите корректное кол-во курсов")
             return
 
         settings = {
@@ -529,7 +531,6 @@ class TransparentWidget(QWidget):
 
     def toggle_settings(self):
         self.is_expanded = not self.is_expanded
-
         self.animation = QPropertyAnimation(self, b"size")
         self.animation.setDuration(300)
         self.animation.setEasingCurve(QEasingCurve.Type.OutQuad)
@@ -579,7 +580,6 @@ class TransparentWidget(QWidget):
 
     def change_background_image(self):
         desktop_path = get_desktop_path()
-
         file_name, _ = QFileDialog.getOpenFileName(
             self,
             "Выберите фоновое изображение",
