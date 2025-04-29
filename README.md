@@ -1,8 +1,10 @@
 # GrassailyTimer 🎓⏱️
 
-Стильный и настраиваемый виджет для рабочего стола Windows/Linux, который отслеживает ваш академический прогресс и количество дней до окончания учебы.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Latest Release](https://img.shields.io/github/v/release/Quvgard/GrassailyTimer?display_name=tag)](https://github.com/Quvgard/GrassailyTimer/releases/latest)
+[![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/Quvgard/GrassailyTimer/total)](https://github.com/Quvgard/GrassailyTimer/releases)
 
-## Скриншоты
+Стильный и настраиваемый виджет для рабочего стола Windows/Linux, который отслеживает ваш академический прогресс и количество дней до окончания учебы.
 
 **Основной интерфейс:**
 
