@@ -6,7 +6,7 @@
 
 ## Скриншот
 
-![Скриншот GrassailyTimer](interface.png)
+![Скриншот GrassailyTimer](assets/Interface.png) 
 
 ## Возможности
 
