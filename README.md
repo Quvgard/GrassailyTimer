@@ -5,6 +5,10 @@
 ## Скриншот
 
 ![Скриншот GrassailyTimer](assets/Interface.png) 
+Пример работы программы
+
+![Скриншот GrassailyTimer](assets/SettingsInterface.png) 
+Пример настроек программы
 
 ## Возможности
 
