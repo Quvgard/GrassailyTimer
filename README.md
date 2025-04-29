@@ -106,10 +106,8 @@
 
 **Пути к папке с настройками:**
 
-*   **Windows:** `%LOCALAPPDATA%\GrassallyTimer\` (Например: `C:\Users\ИмяПользователя\AppData\Local\GrassallyTimer`)
-*   **Linux/macOS:** `~/.grassallytimer/` (Например: `/home/имяпользователя/.grassallytimer/`)
-
-*(Обратите внимание на небольшое отличие в названии папки `GrassallyTimer` от имени репозитория `GrassailyTimer` в коде генерации пути).*
+*   **Windows:** `%LOCALAPPDATA%\GrassailyTimer\` (Например: `C:\Users\ИмяПользователя\AppData\Local\GrassailyTimer`)
+*   **Linux/macOS:** `~/.grassailytimer/` (Например: `/home/имяпользователя/.grassailytimer/`)*
 
 ---
 
