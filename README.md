@@ -6,7 +6,9 @@
 
 ## Скриншот
 
+<div align="center">
 ![Скриншот GrassailyTimer](assets/Interface.png) 
+</div>
 
 ## Возможности
 
