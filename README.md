@@ -41,20 +41,23 @@
 
 **2. Из исходного кода:**
 
-   *   Убедитесь, что у вас установлен Python 3.x и Git.
+   *   Убедитесь, что у вас установлен [Python](https://www.python.org/) (версия 3.12).
    *   Клонируйте репозиторий:
-     ```bash
-     git clone https://github.com/Quvgard/GrassailyTimer.git
-     cd GrassailyTimer
-     ```
-   *   Установите необходимые зависимости (только PyQt6):
-     ```bash
-     pip install PyQt6
-     ```
-   *   Запустите приложение:
-     ```bash
-     python GrassailyTimer.py
-     ```
+    ```bash
+    git clone https://github.com/Quvgard/GrassailyTimer.git
+    ```
+   *   Перейдите в папку проекта:
+    ```bash
+    cd GrassailyTimer
+    ```
+   *   Установите необходимые зависимости:
+    ```bash
+    pip install PyQt6
+    ```
+   *   Запустите скрипт:
+    ```bash
+    python GrassailyTimer.py
+    ```
 
 ---
 
